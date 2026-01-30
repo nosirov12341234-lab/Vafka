@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuyAxis - Xitoydan kargo-katalog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Asosiy CSS - index.html ichida */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --danger-color: #dc2626;
+            --success-color: #10b981;
+            --text-color: #1f2937;
+            --bg-color: #ffffff;
+            --card-bg: #f8fafc;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #60a5fa;
+            --secondary-color: #3b82f6;
+            --accent-color: #f59e0b;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --text-color: #f9fafb;
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --border-color: #374151;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            padding-bottom: 80px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Sohiba rejimi tugmasi */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        #themeBtn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            z-index: 1001;
+        }
+
+        #themeBtn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .logo p {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .marketing-text {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .highlight:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Bo'limlar */
+        section {
+            padding: 30px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            min-height: 60vh;
+        }
+
+        .active-section {
+            display: block;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Qidiruv qutisi */
+        .search-box {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .search-box i {
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        .expanded {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Mahsulotlar grid */
+        .products-grid,
+        .favorites-grid,
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary-color);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 44px;
+        }
+
+        .product-price {
+            color: var(--primary-color);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-price::after {
+            content: " so'm +";
+            font-size: 16px;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .view-product-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .view-product-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--danger-color);
+            font-size: 22px;
+            transition: var(--transition);
+            z-index: 10;
+            box-shadow: var(--shadow);
+        }
+
+        .dark-mode .favorite-btn {
+            background: rgba(31, 41, 55, 0.95);
+        }
+
+        .favorite-btn.active {
+            color: var(--danger-color);
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .favorite-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Pastki navigatsiya */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(248, 250, 252, 0.9);
+        }
+
+        .dark-mode .bottom-nav {
+            background: rgba(31, 41, 55, 0.9);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            opacity: 0.7;
+            transition: var(--transition);
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            min-width: 70px;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+            color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .nav-item i {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .nav-item span {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Modal oynasi */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 20px auto;
+            border-radius: var(--radius);
+            max-width: 900px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: var(--text-color);
+            cursor: pointer;
+            z-index: 10;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--bg-color);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .close-modal:hover {
+            background: var(--border-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                padding: 25px;
+            }
+        }
+
+        /* Mahsulot modal oynasi uchun maxsus stil */
+        .product-gallery {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            scrollbar-width: thin;
+            scroll-snap-type: x mandatory;
+        }
+
+        .gallery-item {
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            scroll-snap-align: start;
+            border: 2px solid var(--border-color);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-details h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .product-description {
+            color: var(--text-color);
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .variations {
+            margin-bottom: 30px;
+        }
+
+        .variation-group {
+            margin-bottom: 20px;
+        }
+
+        .variation-group h4 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .variation-group h4 i {
+            font-size: 16px;
+        }
+
+        .variation-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .variation-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .variation-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .variation-btn.active {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Ilova bloki */
+        .app-links {
+            margin: 30px 0;
+            padding: 25px;
+            background: var(--bg-color);
+            border-radius: var(--radius);
+            border: 2px dashed var(--border-color);
+        }
+
+        .app-links h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .app-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--text-color);
+            transition: var(--transition);
+            font-weight: 500;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .app-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        /* Sotib olish tugmasi */
+        .buy-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            border-radius: var(--radius);
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Profil sahifasi */
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-details h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .btn-edit {
+            padding: 10px 25px;
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-edit:hover {
+            background: rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .social-links, .contact-info {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .social-links h3, .contact-info h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-buttons, .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .social-btn, .contact-btn {
+            padding: 18px 25px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .social-btn {
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .instagram {
+            color: #E1306C;
+        }
+
+        .telegram {
+            color: #0088cc;
+        }
+
+        .contact-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Bo'sh holat */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .empty-state i {
+            font-size: 80px;
+            margin-bottom: 25px;
+            color: var(--border-color);
+        }
+
+        .empty-state p {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* Miqdor tanlash modali */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 2px solid var(--border-color);
+        }
+
+        .quantity-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .quantity-value {
+            font-size: 32px;
+            font-weight: 700;
+            min-width: 80px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        /* Responsive dizayn */
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 28px;
+            }
+            
+            .highlight {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+            
+            .products-grid,
+            .favorites-grid,
+            .search-results {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            
+            .product-title {
+                font-size: 16px;
+            }
+            
+            .product-price {
+                font-size: 20px;
+            }
+            
+            .view-product-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .mobile-only {
+                display: flex;
+                width: 100%;
+            }
+            
+            .section-header h2 {
+                font-size: 24px;
+            }
+            
+            .modal-content {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .gallery-item {
+                height: 300px;
+            }
+            
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+            
+            .social-btn, .contact-btn {
+                padding: 15px;
+                font-size: 14px;
+            }
+            
+            .app-btn {
+                min-width: 100%;
+            }
+            
+            .nav-item i {
+                font-size: 20px;
+            }
+            
+            .nav-item span {
+                font-size: 11px;
+            }
+            
+            #themeBtn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid,
+            .favorites-grid,
+            .search-results {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .marketing-text {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .highlight {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .product-image {
+                height: 180px;
+            }
+            
+            .modal-body {
+                padding: 20px 15px;
+            }
+            
+            .gallery-item {
+                height: 250px;
+            }
+            
+            .product-details h2 {
+                font-size: 24px;
+            }
+            
+            .buy-btn {
+                padding: 15px;
+                font-size: 18px;
+            }
+            
+            .nav-item {
+                padding: 8px 10px;
+                min-width: 60px;
+            }
+        }
+
+        /* Animatsiyalar */
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .product-card {
+            animation: slideInRight 0.5s ease;
+        }
+
+        .product-card:nth-child(even) {
+            animation: slideInLeft 0.5s ease;
+        }
+
+        /* Loading animatsiya */
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notifikatsiya */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            background: var(--success-color);
+            color: white;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            max-width: 400px;
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.warning {
+            background: var(--accent-color);
+        }
+
+        .notification.info {
+            background: var(--primary-color);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        .product-gallery::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .product-gallery::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .product-gallery::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        /* Formalar */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Sotib olish sahifasi */
+        .purchase-summary {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--border-color);
+        }
+
+        .purchase-summary h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        /* Admin havolasi (faqat mobil) */
+        .admin-link {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            text-decoration: none;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            z-index: 999;
+            display: none;
+        }
+
+        .admin-link:hover {
+            transform: scale(1.1) rotate(15deg);
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .admin-link {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sohiba rejimi tugmasi -->
+    <div class="theme-toggle">
+        <button id="themeBtn">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Admin havolasi (faqat mobil) -->
+    <a href="admin.html" class="admin-link" title="Admin Panel">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Buy<span>Axis</span></h1>
+                <p>Xitoydan tez va arzon kargo</p>
+            </div>
+            <div class="marketing-text">
+                <p class="highlight">Optom xarid qilish - eng to'g'ri qaror!</p>
+                <p class="highlight">Biz eng arzonidan beramiz</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Asosiy kontent -->
+    <main>
+        <!-- Mahsulotlar katalogi -->
+        <section id="catalog" class="active-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-box-open"></i> Katalog</h2>
+                    <div class="search-box mobile-only">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Mahsulot qidirish...">
+                    </div>
+                </div>
+                
+                <div class="products-grid">
+                    <!-- Mahsulotlar dinamik ravishda yuklanadi -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Qidiruv sahifasi -->
+        <section id="search" class="hidden-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-search"></i> Qidiruv</h2>
+                </div>
+                <div class="search-box expanded">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Mahsulot nomi yoki tavsifi bo'yicha qidirish...">
+                </div>
+                <div class="search-results">
+                    <!-- Qidiruv natijalari shu yerga keladi -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Sevimlilar sahifasi -->
+        <section id="favorites" class="hidden-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-heart"></i> Sevimlilar</h2>
+                </div>
+                <div class="favorites-grid">
+                    <!-- Sevimli mahsulotlar shu yerga keladi -->
+                </div>
+                <div class="empty-state" id="emptyFavorites">
+                    <i class="far fa-heart"></i>
+                    <p>Hozircha sevimli mahsulotlar yo'q</p>
+                    <p style="margin-top: 10px; font-size: 16px; opacity: 0.7;">Mahsulotlarni sevimlilarga qo'shish uchun ♡ belgisini bosing</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profil sahifasi -->
+        <section id="profile" class="hidden-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-user"></i> Profil</h2>
+                </div>
+                <div class="profile-info">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="userName">Foydalanuvchi</h3>
+                        <button id="editProfileBtn" class="btn-edit">
+                            <i class="fas fa-edit"></i> Tahrirlash
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="social-links">
+                    <h3><i class="fas fa-users"></i> Bizning ijtimoiy tarmoqlar</h3>
+                    <div class="social-buttons">
+                        <a href="https://instagram.com/buyaxis" target="_blank" class="social-btn instagram">
+                            <i class="fab fa-instagram"></i> Instagram: @buyaxis
+                        </a>
+                        <a href="https://t.me/buyaxis" target="_blank" class="social-btn telegram">
+                            <i class="fab fa-telegram"></i> Telegram: @buyaxis
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="contact-info">
+                    <h3><i class="fas fa-shopping-cart"></i> Buyurtma berish uchun</h3>
+                    <div class="contact-buttons">
+                        <a href="https://t.me/senior_axis" target="_blank" class="contact-btn">
+                            <i class="fab fa-telegram"></i> Telegram orqali: @senior_axis
+                        </a>
+                        <a href="tel:+998942238690" class="contact-btn">
+                            <i class="fas fa-phone"></i> Telefon orqali: +998 94 223 86 90
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mahsulot modal oynasi -->
+        <div id="productModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <!-- Mahsulot ma'lumotlari shu yerga yuklanadi -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Profil tahrirlash modal oynasi -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <h3><i class="fas fa-user-edit"></i> Profil ma'lumotlarini tahrirlash</h3>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="firstName">Ism</label>
+                            <input type="text" id="firstName" required placeholder="Ismingizni kiriting">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Familiya</label>
+                            <input type="text" id="lastName" required placeholder="Familiyangizni kiriting">
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Saqlash
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sotib olish modal oynasi -->
+        <div id="purchaseModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <!-- Sotib olish ma'lumotlari shu yerga yuklanadi -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pastki menyu (Mobil uchun) -->
+    <nav class="bottom-nav">
+        <a href="#catalog" class="nav-item active" data-section="catalog">
+            <i class="fas fa-home"></i>
+            <span>Katalog</span>
+        </a>
+        <a href="#search" class="nav-item" data-section="search">
+            <i class="fas fa-search"></i>
+            <span>Qidiruv</span>
+        </a>
+        <a href="#favorites" class="nav-item" data-section="favorites">
+            <i class="fas fa-heart"></i>
+            <span>Sevimlilar</span>
+        </a>
+        <a href="#profile" class="nav-item" data-section="profile">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <script>
+        // Asosiy JavaScript - index.html ichida
+        document.addEventListener('DOMContentLoaded', function() {
+            // O'zgaruvchilar
+            let currentTheme = localStorage.getItem('buyaxis_theme') || 'light';
+            let products = JSON.parse(localStorage.getItem('buyaxis_products')) || [];
+            let favorites = JSON.parse(localStorage.getItem('buyaxis_favorites')) || [];
+            let userProfile = JSON.parse(localStorage.getItem('buyaxis_profile')) || {
+                firstName: 'Foydalanuvchi',
+                lastName: ''
+            };
+            let currentProductIndex = null;
+            let purchaseQuantity = 1;
+            let selectedColor = null;
+            let selectedSize = null;
+
+            // Elementlarni tanlash
+            const themeBtn = document.getElementById('themeBtn');
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section');
+            const productsGrid = document.querySelector('.products-grid');
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.querySelector('.search-results');
+            const favoritesGrid = document.querySelector('.favorites-grid');
+            const emptyFavorites = document.getElementById('emptyFavorites');
+            const userName = document.getElementById('userName');
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const editProfileModal = document.getElementById('editProfileModal');
+            const profileForm = document.getElementById('profileForm');
+            const productModal = document.getElementById('productModal');
+            const purchaseModal = document.getElementById('purchaseModal');
+            const closeModals = document.querySelectorAll('.close-modal');
+            const mobileSearchInput = document.querySelector('.mobile-only input');
+
+            // Notifikatsiya funksiyasi
+            function showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100px)';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+
+            // Sohiba rejimini o'rnatish
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                    themeBtn.title = 'Yorqin rejimga o\'tish';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                    themeBtn.title = 'Qorong\'u rejimga o\'tish';
+                }
+                localStorage.setItem('buyaxis_theme', theme);
+            }
+
+            // Boshlang'ich sohiba rejimi
+            setTheme(currentTheme);
+
+            // Sohiba rejimi tugmasi
+            themeBtn.addEventListener('click', function() {
+                currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+                setTheme(currentTheme);
+                showNotification(`Sohiba ${currentTheme === 'dark' ? 'qorong\'u' : 'yorqin'} rejimga o'zgartirildi`, 'info');
+            });
+
+            // Navigatsiya
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Faol nav itemni o'zgartirish
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Bo'limlarni ko'rsatish/yashirish
+                    sections.forEach(section => {
+                        section.classList.remove('active-section');
+                        section.classList.add('hidden-section');
+                    });
+                    
+                    const activeSection = document.getElementById(sectionId);
+                    activeSection.classList.remove('hidden-section');
+                    activeSection.classList.add('active-section');
+                    
+                    // Agar sevimlilar bo'limiga o'tilsa, sevimlilarni yangilash
+                    if (sectionId === 'favorites') {
+                        updateFavoritesDisplay();
+                    }
+                });
+            });
+
+            // Mahsulotlarni yuklash va ko'rsatish
+            function loadProducts() {
+                productsGrid.innerHTML = '';
+                
+                if (products.length === 0) {
+                    productsGrid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <i class="fas fa-box-open"></i>
+                            <p>Hozircha mahsulotlar mavjud emas</p>
+                            <p style="margin-top: 10px; font-size: 16px; opacity: 0.7;">
+                                Admin panel orqali mahsulot qo'shing
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                products.forEach((product, index) => {
+                    const isFavorite = favorites.includes(product.id);
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.images[0] || 'https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis'}" 
+                                 alt="${product.name}"
+                                 onerror="this.src='https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis'">
+                        </div>
+                        <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${product.id}" title="${isFavorite ? 'Sevimlilardan olib tashlash' : 'Sevimlilarga qo\'shish'}">
+                            <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+                        </button>
+                        <div class="product-info">
+                            <h3 class="product-title">${product.name}</h3>
+                            <div class="product-price">${product.price.toLocaleString()}</div>
+                            <button class="view-product-btn view-product" data-index="${index}" title="Batafsil ko'rish">
+                                <i class="fas fa-eye"></i> Batafsil ko'rish
+                            </button>
+                        </div>
+                    `;
+                    productsGrid.appendChild(productCard);
+                });
+                
+                // Mahsulotni ko'rish tugmalari
+                document.querySelectorAll('.view-product').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        showProductModal(index);
+                    });
+                });
+                
+                // Sevimlilar tugmalari
+                document.querySelectorAll('.favorite-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const productId = this.getAttribute('data-id');
+                        toggleFavorite(productId);
+                    });
+                });
+                
+                // Mahsulot karta bosilishi
+                document.querySelectorAll('.product-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        if (!e.target.closest('.favorite-btn') && !e.target.closest('.view-product-btn')) {
+                            const index = parseInt(this.querySelector('.view-product-btn').getAttribute('data-index'));
+                            showProductModal(index);
+                        }
+                    });
+                });
+            }
+
+            // Mahsulot modal oynasini ko'rsatish
+            function showProductModal(index) {
+                const product = products[index];
+                currentProductIndex = index;
+                const modalBody = document.querySelector('#productModal .modal-body');
+                
+                // Ranglar
+                let colorsHtml = '';
+                if (product.colors && product.colors.length > 0) {
+                    colorsHtml = `
+                        <div class="variation-group">
+                            <h4><i class="fas fa-palette"></i> Ranglar:</h4>
+                            <div class="variation-options">
+                                ${product.colors.map((color, i) => `
+                                    <button class="variation-btn ${i === 0 ? 'active' : ''}" 
+                                            data-type="color" 
+                                            data-value="${color}"
+                                            onclick="selectVariation('color', '${color}')">
+                                        ${color}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    selectedColor = product.colors[0];
+                }
+                
+                // O'lchamlar
+                let sizesHtml = '';
+                if (product.sizes && product.sizes.length > 0) {
+                    sizesHtml = `
+                        <div class="variation-group">
+                            <h4><i class="fas fa-ruler"></i> O'lchamlar:</h4>
+                            <div class="variation-options">
+                                ${product.sizes.map((size, i) => `
+                                    <button class="variation-btn ${i === 0 ? 'active' : ''}" 
+                                            data-type="size" 
+                                            data-value="${size}"
+                                            onclick="selectVariation('size', '${size}')">
+                                        ${size}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    selectedSize = product.sizes[0];
+                }
+                
+                // Ilovalar
+                let appsHtml = '';
+                if (product.apps && product.apps.length > 0) {
+                    appsHtml = `
+                        <div class="app-links">
+                            <h3><i class="fas fa-mobile-alt"></i> Ilovada mavjud:</h3>
+                            <div class="app-buttons">
+                                ${product.apps.map(app => `
+                                    <a href="#" class="app-btn" target="_blank">
+                                        <img src="${app.icon}" 
+                                             alt="${app.name}" 
+                                             class="app-icon"
+                                             onerror="this.src='https://via.placeholder.com/30/3b82f6/ffffff?text=App'">
+                                        <span>${app.name}</span>
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                modalBody.innerHTML = `
+                    <div class="product-gallery">
+                        ${product.images.map(img => `
+                            <div class="gallery-item">
+                                <img src="${img}" 
+                                     alt="${product.name}"
+                                     onerror="this.src='https://via.placeholder.com/400/3b82f6/ffffff?text=BuyAxis'">
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="product-details">
+                        <h2>${product.name}</h2>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-price">${product.price.toLocaleString()}</div>
+                        
+                        <div class="variations">
+                            ${colorsHtml}
+                            ${sizesHtml}
+                        </div>
+                        
+                        ${appsHtml}
+                        
+                        <button class="buy-btn" onclick="showPurchaseModal()">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sotib olish
+                        </button>
+                    </div>
+                `;
+                
+                productModal.style.display = 'block';
+            }
+
+            // Rang/o'lcham tanlash (global funksiya)
+            window.selectVariation = function(type, value) {
+                if (type === 'color') {
+                    selectedColor = value;
+                    document.querySelectorAll('.variation-btn[data-type="color"]').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.getAttribute('data-value') === value) {
+                            btn.classList.add('active');
+                        }
+                    });
+                } else if (type === 'size') {
+                    selectedSize = value;
+                    document.querySelectorAll('.variation-btn[data-type="size"]').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.getAttribute('data-value') === value) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }
+            };
+
+            // Sotib olish modal oynasini ko'rsatish
+            window.showPurchaseModal = function() {
+                if (!currentProductIndex !== null) return;
+                
+                const product = products[currentProductIndex];
+                const modalBody = document.querySelector('#purchaseModal .modal-body');
+                
+                modalBody.innerHTML = `
+                    <h2><i class="fas fa-shopping-cart"></i> Sotib olish</h2>
+                    
+                    <div class="purchase-summary">
+                        <h3><i class="fas fa-receipt"></i> Buyurtma ma'lumotlari</h3>
+                        
+                        <div class="summary-item">
+                            <span>Mahsulot:</span>
+                            <span>${product.name}</span>
+                        </div>
+                        
+                        ${selectedColor ? `
+                        <div class="summary-item">
+                            <span>Tanlangan rang:</span>
+                            <span>${selectedColor}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${selectedSize ? `
+                        <div class="summary-item">
+                            <span>Tanlangan o'lcham:</span>
+                            <span>${selectedSize}</span>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="summary-item">
+                            <span>Narx (birlik):</span>
+                            <span>${product.price.toLocaleString()} so'm +</span>
+                        </div>
+                        
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity-value" id="quantityValue">${purchaseQuantity}</span>
+                            <button class="quantity-btn" onclick="changeQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span>Jami narx:</span>
+                            <span id="totalPrice">${(product.price * purchaseQuantity).toLocaleString()} so'm +</span>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <h3><i class="fas fa-phone-alt"></i> Buyurtma berish uchun</h3>
+                        <div class="contact-buttons">
+                            <a href="https://t.me/senior_axis" target="_blank" class="contact-btn" onclick="sendTelegramOrder()">
+                                <i class="fab fa-telegram"></i> Telegram orqali buyurtma berish
+                            </a>
+                            <a href="tel:+998942238690" class="contact-btn" onclick="callForOrder()">
+                                <i class="fas fa-phone"></i> Telefon orqali buyurtma berish
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" style="width: 100%; margin-top: 20px; padding: 15px;" onclick="productModal.style.display='block'; purchaseModal.style.display='none';">
+                        <i class="fas fa-arrow-left"></i> Orqaga
+                    </button>
+                `;
+                
+                productModal.style.display = 'none';
+                purchaseModal.style.display = 'block';
+            };
+
+            // Miqdor o'zgartirish (global funksiya)
+            window.changeQuantity = function(change) {
+                const product = products[currentProductIndex];
+                purchaseQuantity += change;
+                if (purchaseQuantity < 1) purchaseQuantity = 1;
+                if (purchaseQuantity > 99) purchaseQuantity = 99;
+                
+                document.getElementById('quantityValue').textContent = purchaseQuantity;
+                document.getElementById('totalPrice').textContent = (product.price * purchaseQuantity).toLocaleString() + ' so\'m +';
+            };
+
+            // Telegram orqali buyurtma (global funksiya)
+            window.sendTelegramOrder = function() {
+                const product = products[currentProductIndex];
+                const message = `BuyAxis buyurtma:%0A%0A` +
+                               `Mahsulot: ${product.name}%0A` +
+                               `${selectedColor ? `Rang: ${selectedColor}%0A` : ''}` +
+                               `${selectedSize ? `O'lcham: ${selectedSize}%0A` : ''}` +
+                               `Miqdor: ${purchaseQuantity} ta%0A` +
+                               `Jami narx: ${(product.price * purchaseQuantity).toLocaleString()} so'm +%0A%0A` +
+                               `Mening ismim: ${userName.textContent}`;
+                
+                const telegramUrl = `https://t.me/senior_axis?text=${message}`;
+                window.open(telegramUrl, '_blank');
+                showNotification('Telegramda buyurtma yuborildi!', 'success');
+            };
+
+            // Telefon orqali buyurtma (global funksiya)
+            window.callForOrder = function() {
+                showNotification('Telefon raqamiga qo\'ng\'iroq qilinmoqda...', 'info');
+            };
+
+            // Sevimlilarga qo'shish/o'chirish
+            function toggleFavorite(productId) {
+                const index = favorites.indexOf(productId);
+                if (index === -1) {
+                    favorites.push(productId);
+                    showNotification('Mahsulot sevimlilarga qo\'shildi!', 'success');
+                } else {
+                    favorites.splice(index, 1);
+                    showNotification('Mahsulot sevimlilardan olib tashlandi!', 'info');
+                }
+                
+                localStorage.setItem('buyaxis_favorites', JSON.stringify(favorites));
+                loadProducts();
+                
+                // Agar sevimlilar bo'limi ochiq bo'lsa, yangilash
+                if (document.getElementById('favorites').classList.contains('active-section')) {
+                    updateFavoritesDisplay();
+                }
+            }
+
+            // Sevimlilarni ko'rsatish
+            function updateFavoritesDisplay() {
+                if (!favoritesGrid) return;
+                
+                favoritesGrid.innerHTML = '';
+                
+                const favoriteProducts = products.filter(product => favorites.includes(product.id));
+                
+                if (favoriteProducts.length === 0) {
+                    emptyFavorites.style.display = 'block';
+                    return;
+                }
+                
+                emptyFavorites.style.display = 'none';
+                
+                favoriteProducts.forEach((product, index) => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.images[0] || 'https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis'}" 
+                                 alt="${product.name}"
+                                 onerror="this.src='https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis'">
+                        </div>
+                        <button class="favorite-btn active" data-id="${product.id}" title="Sevimlilardan olib tashlash">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <div class="product-info">
+                            <h3 class="product-title">${product.name}</h3>
+                            <div class="product-price">${product.price.toLocaleString()}</div>
+                            <button class="view-product-btn view-product" data-index="${products.indexOf(product)}" title="Batafsil ko'rish">
+                                <i class="fas fa-eye"></i> Batafsil ko'rish
+                            </button>
+                        </div>
+                    `;
+                    favoritesGrid.appendChild(productCard);
+                });
+                
+                // Tugmalarni qayta bog'lash
+                document.querySelectorAll('.view-product').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        showProductModal(parseInt(index));
+                    });
+                });
+                
+                document.querySelectorAll('.favorite-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const productId = this.getAttribute('data-id');
+                        toggleFavorite(productId);
+                    });
+                });
+            }
+
+            // Qidiruv funksiyasi
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase().trim();
+                    
+                    if (!query) {
+                        searchResults.innerHTML = '';
+                        return;
+                    }
+                    
+                    const filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(query) || 
+                        product.description.toLowerCase().includes(query)
+                    );
+                    
+                    searchResults.innerHTML = '';
+                    
+                    if (filteredProducts.length === 0) {
+                        searchResults.innerHTML = `
+                            <div class="empty-state" style="grid-column: 1/-1;">
+                                <i class="fas fa-search"></i>
+                                <p>"${query}" so'rovi bo'yicha mahsulot topilmadi</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    filteredProducts.forEach((product, index) => {
+                        const isFavorite = favorites.includes(product.id);
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <div class="product-image">
+                                <img src="${product.images[0] || 'https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis'}" 
+                                     alt="${product.name}"
+                                     onerror="this.src='https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis'">
+                            </div>
+                            <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${product.id}" title="${isFavorite ? 'Sevimlilardan olib tashlash' : 'Sevimlilarga qo\'shish'}">
+                                <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+                            </button>
+                            <div class="product-info">
+                                <h3 class="product-title">${product.name}</h3>
+                                <div class="product-price">${product.price.toLocaleString()}</div>
+                                <button class="view-product-btn view-product" data-index="${products.indexOf(product)}" title="Batafsil ko'rish">
+                                    <i class="fas fa-eye"></i> Batafsil ko'rish
+                                </button>
+                            </div>
+                        `;
+                        searchResults.appendChild(productCard);
+                    });
+                    
+                    // Tugmalarni qayta bog'lash
+                    document.querySelectorAll('.view-product').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            showProductModal(index);
+                        });
+                    });
+                    
+                    document.querySelectorAll('.favorite-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const productId = this.getAttribute('data-id');
+                            toggleFavorite(productId);
+                        });
+                    });
+                });
+            }
+
+            // Mobil qidiruv
+            if (mobileSearchInput) {
+                mobileSearchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase().trim();
+                    const filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(query) || 
+                        product.description.toLowerCase().includes(query)
+                    );
+                    
+                    if (query && filteredProducts.length === 0) {
+                        showNotification('Hech qanday mahsulot topilmadi', 'warning');
+                    }
+                });
+            }
+
+            // Profil ma'lumotlarini yangilash
+            function updateProfileDisplay() {
+                const fullName = `${userProfile.firstName} ${userProfile.lastName}`.trim();
+                userName.textContent = fullName || 'Foydalanuvchi';
+                localStorage.setItem('buyaxis_profile', JSON.stringify(userProfile));
+            }
+
+            // Profil tahrirlash modal oynasi
+            editProfileBtn.addEventListener('click', function() {
+                document.getElementById('firstName').value = userProfile.firstName;
+                document.getElementById('lastName').value = userProfile.lastName;
+                editProfileModal.style.display = 'block';
+            });
+
+            // Profil ma'lumotlarini saqlash
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                userProfile.firstName = document.getElementById('firstName').value.trim();
+                userProfile.lastName = document.getElementById('lastName').value.trim();
+                
+                updateProfileDisplay();
+                editProfileModal.style.display = 'none';
+                showNotification('Profil ma\'lumotlari saqlandi!', 'success');
+            });
+
+            // Modal oynalarni yopish
+            closeModals.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+            // Tashqariga bosilganda modalni yopish
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+
+            // Escape tugmasi bilan modalni yopish
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modals = document.querySelectorAll('.modal');
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'block') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+            });
+
+            // Boshlang'ich ma'lumotlarni yuklash
+            function initializeData() {
+                if (products.length === 0) {
+                    // Agar mahsulotlar yo'q bo'lsa, admin panel ma'lumotlarini olish
+                    const adminProducts = JSON.parse(localStorage.getItem('buyaxis_products'));
+                    if (adminProducts && adminProducts.length > 0) {
+                        products = adminProducts;
+                    }
+                }
+                
+                loadProducts();
+                updateProfileDisplay();
+                updateFavoritesDisplay();
+            }
+
+            // Ilovani ishga tushirish
+            initializeData();
+            
+            // Rasm yuklash xatolarini oldini olish
+            document.addEventListener('error', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    e.target.src = 'https://via.placeholder.com/400x300/3b82f6/ffffff?text=BuyAxis';
+                    e.target.onerror = null;
+                }
+            }, true);
+            
+            // Swipe effekti uchun
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const swipeDistance = touchEndX - touchStartX;
+                
+                if (Math.abs(swipeDistance) > swipeThreshold) {
+                    const currentSection = document.querySelector('.active-section');
+                    const sectionsArray = Array.from(sections);
+                    const currentIndex = sectionsArray.indexOf(currentSection);
+                    
+                    if (swipeDistance > 0 && currentIndex > 0) {
+                        // Chapga surish - oldingi bo'lim
+                        navItems[currentIndex - 1].click();
+                    } else if (swipeDistance < 0 && currentIndex < sectionsArray.length - 1) {
+                        // O'ngga surish - keyingi bo'lim
+                        navItems[currentIndex + 1].click();
+                    }
+                }
+            }
+            
+            // Yana bir notifikatsiya testi
+            setTimeout(() => {
+                if (products.length > 0 && favorites.length === 0) {
+                    showNotification('Mahsulotlarni sevimlilarga qo\'shish uchun ♡ belgisini bosing!', 'info');
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

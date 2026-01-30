@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuyAxis Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin panel CSS - admin.html ichida */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+            --danger-color: #dc2626;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --text-color: #1f2937;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #60a5fa;
+            --secondary-color: #3b82f6;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --text-color: #f9fafb;
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --border-color: #374151;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Login sahifasi */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 20px;
+        }
+
+        .login-container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        /* Formalar */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        /* Admin panel header */
+        .admin-panel {
+            min-height: 100vh;
+            background: var(--bg-color);
+        }
+
+        .admin-header {
+            background: var(--card-bg);
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .btn-logout {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+        /* Admin navigatsiya */
+        .admin-main {
+            padding: 30px 0;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: var(--radius) var(--radius) 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            opacity: 0.7;
+        }
+
+        .nav-btn.active {
+            background: var(--primary-color);
+            color: white;
+            opacity: 1;
+        }
+
+        .nav-btn:hover:not(.active) {
+            background: rgba(37, 99, 235, 0.1);
+            opacity: 1;
+        }
+
+        /* Tab kontentlari */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .tab-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        /* Mahsulotlar ro'yxati */
+        .products-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .product-item {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .product-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-info p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .product-price::after {
+            content: " so'm +";
+            font-size: 14px;
+            color: var(--warning-color);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-edit {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0da271;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+        /* Sozlamalar */
+        .settings-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .setting-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .setting-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .setting-card p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .apps-container {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .app-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-color);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+
+        .app-item img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .app-item span {
+            font-weight: 500;
+        }
+
+        /* Rasm yuklash */
+        .image-upload, .icon-upload {
+            margin-top: 8px;
+        }
+
+        .image-preview, .icon-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preview-item {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            border: 2px solid var(--border-color);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .remove-image:hover {
+            transform: scale(1.1);
+        }
+
+        .icon-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .icon-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        /* Dinamik ro'yxatlar */
+        .dynamic-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .dynamic-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-color);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+
+        .dynamic-item input {
+            border: none;
+            background: transparent;
+            padding: 4px;
+            min-width: 120px;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .dynamic-item input:focus {
+            outline: none;
+        }
+
+        .remove-item {
+            background: transparent;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .remove-item:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        /* Ilovalar tanlovi */
+        .apps-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .app-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .app-checkbox:hover {
+            border-color: var(--primary-color);
+        }
+
+        .app-checkbox input[type="checkbox"] {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .app-checkbox img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        /* Modal oynasi */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 20px auto;
+            border-radius: var(--radius);
+            max-width: 800px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            color: var(--text-color);
+            cursor: pointer;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--bg-color);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: var(--border-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        #modalTitle {
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .form-actions .btn-primary,
+        .form-actions .btn-secondary {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        /* Bo'sh holat */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: var(--border-color);
+        }
+
+        .empty-state p {
+            font-size: 18px;
+        }
+
+        /* Responsive dizayn */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .product-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .product-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .product-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+            
+            .admin-nav {
+                justify-content: center;
+            }
+            
+            .tab-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn-primary,
+            .form-actions .btn-secondary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .admin-header h1 {
+                font-size: 20px;
+            }
+            
+            .btn-logout {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+        }
+
+        /* Rang va o'lcham bo'limlari */
+        #colorsGroup, #sizesGroup {
+            display: none;
+        }
+
+        #colorsGroup:has(.dynamic-item), #sizesGroup:has(.dynamic-item) {
+            display: block;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Animatsiyalar */
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .product-item {
+            animation: slideIn 0.3s ease;
+        }
+
+        /* Loading animatsiya */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notifikatsiya */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            background: var(--success-color);
+            color: white;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.warning {
+            background: var(--warning-color);
+        }
+
+        .notification.info {
+            background: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login sahifasi -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>BuyAxis</h1>
+                <p>Admin Panelga kirish</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Login</label>
+                    <input type="text" id="username" required placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label for="password">Parol</label>
+                    <input type="password" id="password" required placeholder="nosirov8055">
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Kirish
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin panel -->
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <header class="admin-header">
+            <div class="container">
+                <h1><i class="fas fa-cog"></i> BuyAxis Admin Panel</h1>
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Chiqish
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="container">
+                <div class="admin-nav">
+                    <button class="nav-btn active" data-tab="products">
+                        <i class="fas fa-box"></i> Mahsulotlar
+                    </button>
+                    <button class="nav-btn" data-tab="settings">
+                        <i class="fas fa-cog"></i> Sozlamalar
+                    </button>
+                </div>
+
+                <!-- Mahsulotlar boshqaruvi -->
+                <div id="productsTab" class="tab-content active">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-box-open"></i> Mahsulotlarni boshqarish</h2>
+                        <button id="addProductBtn" class="btn-primary">
+                            <i class="fas fa-plus"></i> Yangi mahsulot
+                        </button>
+                    </div>
+
+                    <div class="products-list">
+                        <!-- Mahsulotlar ro'yxati -->
+                    </div>
+                </div>
+
+                <!-- Sozlamalar -->
+                <div id="settingsTab" class="tab-content">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-sliders-h"></i> Sozlamalar</h2>
+                    </div>
+                    <div class="settings-grid">
+                        <div class="setting-card">
+                            <h3><i class="fas fa-mobile-alt"></i> Ilova ikonkalari</h3>
+                            <p>Mahsulot sahifasida ko'rinadigan ilova ikonkalari</p>
+                            <div class="apps-container">
+                                <!-- Ilovalar ro'yxati -->
+                            </div>
+                            <button class="btn-secondary" id="addAppBtn">
+                                <i class="fas fa-plus"></i> Ilova qo'shish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mahsulot qo'shish/o'zgartirish modal oynasi -->
+        <div id="productModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <h2 id="modalTitle"><i class="fas fa-box"></i> Yangi mahsulot</h2>
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        
+                        <div class="form-group">
+                            <label for="productName"><i class="fas fa-tag"></i> Mahsulot nomi *</label>
+                            <input type="text" id="productName" required placeholder="Masalan: Smartphone X Pro">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productDescription"><i class="fas fa-align-left"></i> Tavsif *</label>
+                            <textarea id="productDescription" rows="4" required placeholder="Mahsulotning batafsil tavsifini kiriting..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productPrice"><i class="fas fa-money-bill-wave"></i> Narxi (so'm) *</label>
+                            <input type="number" id="productPrice" required placeholder="Masalan: 3200000">
+                            <small><i class="fas fa-info-circle"></i> Narx oxirida avtomatik ravishda "so'm +" qo'shiladi</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productImages"><i class="fas fa-images"></i> Rasmlar</label>
+                            <div class="image-upload">
+                                <div class="image-preview" id="imagePreview">
+                                    <!-- Rasm oldindan ko'rish -->
+                                </div>
+                                <input type="file" id="productImages" multiple accept="image/*" style="display: none;">
+                                <button type="button" class="btn-secondary" id="uploadImagesBtn">
+                                    <i class="fas fa-upload"></i> Rasmlarni yuklash
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ranglar -->
+                        <div class="form-group" id="colorsGroup">
+                            <label><i class="fas fa-palette"></i> Ranglar</label>
+                            <div class="dynamic-list" id="colorsList">
+                                <!-- Ranglar ro'yxati -->
+                            </div>
+                            <button type="button" class="btn-secondary" id="addColorBtn">
+                                <i class="fas fa-plus"></i> Rang qo'shish
+                            </button>
+                        </div>
+
+                        <!-- O'lchamlar -->
+                        <div class="form-group" id="sizesGroup">
+                            <label><i class="fas fa-ruler"></i> O'lchamlar</label>
+                            <div class="dynamic-list" id="sizesList">
+                                <!-- O'lchamlar ro'yxati -->
+                            </div>
+                            <button type="button" class="btn-secondary" id="addSizeBtn">
+                                <i class="fas fa-plus"></i> O'lcham qo'shish
+                            </button>
+                        </div>
+
+                        <!-- Ilovalar -->
+                        <div class="form-group">
+                            <label><i class="fas fa-shopping-cart"></i> Ilovalar</label>
+                            <div class="apps-selection" id="appsSelection">
+                                <!-- Ilovalar tanlovi -->
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Saqlash
+                            </button>
+                            <button type="button" class="btn-secondary" id="cancelBtn">
+                                <i class="fas fa-times"></i> Bekor qilish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ilova qo'shish modal oynasi -->
+        <div id="appModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-body">
+                    <h2><i class="fas fa-mobile-alt"></i> Ilova qo'shish</h2>
+                    <form id="appForm">
+                        <div class="form-group">
+                            <label for="appName"><i class="fas fa-tag"></i> Ilova nomi *</label>
+                            <input type="text" id="appName" required placeholder="Masalan: Pinduoduo, 1688">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appIcon"><i class="fas fa-image"></i> Ilova ikonkasi</label>
+                            <div class="icon-upload">
+                                <div class="icon-preview" id="iconPreview">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <input type="file" id="appIcon" accept="image/*" style="display: none;">
+                                <button type="button" class="btn-secondary" id="uploadIconBtn">
+                                    <i class="fas fa-upload"></i> Ikonka yuklash
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Saqlash
+                            </button>
+                            <button type="button" class="btn-secondary" id="cancelAppBtn">
+                                <i class="fas fa-times"></i> Bekor qilish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin panel JavaScript - admin.html ichida
+        document.addEventListener('DOMContentLoaded', function() {
+            // O'zgaruvchilar
+            let products = JSON.parse(localStorage.getItem('buyaxis_products')) || [];
+            let apps = JSON.parse(localStorage.getItem('buyaxis_apps')) || [
+                { name: 'Pinduoduo', icon: 'https://via.placeholder.com/50/FF6B6B/ffffff?text=P' },
+                { name: '1688', icon: 'https://via.placeholder.com/50/4ECDC4/ffffff?text=1688' }
+            ];
+            let editingProductId = null;
+            let productImages = [];
+            let currentAppIcon = null;
+
+            // Elementlarni tanlash
+            const loginScreen = document.getElementById('loginScreen');
+            const adminPanel = document.getElementById('adminPanel');
+            const loginForm = document.getElementById('loginForm');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const productsList = document.querySelector('.products-list');
+            const addProductBtn = document.getElementById('addProductBtn');
+            const productModal = document.getElementById('productModal');
+            const productForm = document.getElementById('productForm');
+            const modalTitle = document.getElementById('modalTitle');
+            const productIdInput = document.getElementById('productId');
+            const productNameInput = document.getElementById('productName');
+            const productDescriptionInput = document.getElementById('productDescription');
+            const productPriceInput = document.getElementById('productPrice');
+            const imagePreview = document.getElementById('imagePreview');
+            const uploadImagesBtn = document.getElementById('uploadImagesBtn');
+            const imageInput = document.getElementById('productImages');
+            const colorsList = document.getElementById('colorsList');
+            const addColorBtn = document.getElementById('addColorBtn');
+            const sizesList = document.getElementById('sizesList');
+            const addSizeBtn = document.getElementById('addSizeBtn');
+            const appsSelection = document.getElementById('appsSelection');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const closeModals = document.querySelectorAll('.close-modal');
+            const addAppBtn = document.getElementById('addAppBtn');
+            const appModal = document.getElementById('appModal');
+            const appForm = document.getElementById('appForm');
+            const cancelAppBtn = document.getElementById('cancelAppBtn');
+            const uploadIconBtn = document.getElementById('uploadIconBtn');
+            const appIconInput = document.getElementById('appIcon');
+
+            // Notifikatsiya funksiyasi
+            function showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100px)';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+
+            // Login tizimi
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === 'admin' && password === 'nosirov8055') {
+                    loginScreen.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                    loadProductsList();
+                    loadAppsSelection();
+                    showNotification('Admin panelga muvaffaqiyatli kirdingiz!', 'success');
+                } else {
+                    showNotification('Login yoki parol noto\'g\'ri!', 'error');
+                }
+            });
+
+            // Chiqish tizimi
+            logoutBtn.addEventListener('click', function() {
+                if (confirm('Admin paneldan chiqishni istaysizmi?')) {
+                    adminPanel.style.display = 'none';
+                    loginScreen.style.display = 'flex';
+                    loginForm.reset();
+                    showNotification('Muvaffaqiyatli chiqdingiz!', 'info');
+                }
+            });
+
+            // Navigatsiya
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.getAttribute('data-tab');
+                    
+                    // Nav tugmalarini faollashtirish
+                    navBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Tablarni ko'rsatish/yashirish
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    document.getElementById(`${tab}Tab`).classList.add('active');
+                });
+            });
+
+            // Mahsulotlar ro'yxatini yuklash
+            function loadProductsList() {
+                productsList.innerHTML = '';
+                
+                if (products.length === 0) {
+                    productsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <p>Hozircha mahsulotlar mavjud emas</p>
+                            <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
+                                Yangi mahsulot qo'shish uchun "Yangi mahsulot" tugmasini bosing
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                products.forEach((product, index) => {
+                    const productItem = document.createElement('div');
+                    productItem.className = 'product-item';
+                    productItem.innerHTML = `
+                        <div class="product-image">
+                            <img src="${product.images[0] || 'https://via.placeholder.com/100/3b82f6/ffffff?text=BuyAxis'}" 
+                                 alt="${product.name}"
+                                 onerror="this.src='https://via.placeholder.com/100/3b82f6/ffffff?text=BuyAxis'">
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p>${product.description.substring(0, 100)}${product.description.length > 100 ? '...' : ''}</p>
+                            <div class="product-price">${product.price.toLocaleString()}</div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-edit edit-product" data-id="${product.id}">
+                                <i class="fas fa-edit"></i> Tahrirlash
+                            </button>
+                            <button class="btn-delete delete-product" data-id="${product.id}">
+                                <i class="fas fa-trash"></i> O'chirish
+                            </button>
+                        </div>
+                    `;
+                    productsList.appendChild(productItem);
+                });
+                
+                // Tahrirlash tugmalari
+                document.querySelectorAll('.edit-product').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const productId = this.getAttribute('data-id');
+                        editProduct(productId);
+                    });
+                });
+                
+                // O'chirish tugmalari
+                document.querySelectorAll('.delete-product').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const productId = this.getAttribute('data-id');
+                        deleteProduct(productId);
+                    });
+                });
+            }
+
+            // Ilovalar tanlovini yuklash
+            function loadAppsSelection() {
+                appsSelection.innerHTML = '';
+                
+                if (apps.length === 0) {
+                    appsSelection.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--text-color); opacity: 0.6;">
+                            <i class="fas fa-mobile-alt" style="font-size: 24px; margin-bottom: 10px;"></i>
+                            <p>Ilovalar mavjud emas</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                apps.forEach((app, index) => {
+                    const appCheckbox = document.createElement('label');
+                    appCheckbox.className = 'app-checkbox';
+                    appCheckbox.innerHTML = `
+                        <input type="checkbox" value="${index}" data-app='${JSON.stringify(app)}'>
+                        <img src="${app.icon}" 
+                             alt="${app.name}" 
+                             class="app-icon"
+                             onerror="this.src='https://via.placeholder.com/20/3b82f6/ffffff?text=App'">
+                        <span>${app.name}</span>
+                    `;
+                    appsSelection.appendChild(appCheckbox);
+                });
+            }
+
+            // Ilovalar ro'yxatini yangilash
+            function updateAppsList() {
+                const appsContainer = document.querySelector('.apps-container');
+                appsContainer.innerHTML = '';
+                
+                apps.forEach((app, index) => {
+                    const appItem = document.createElement('div');
+                    appItem.className = 'app-item';
+                    appItem.innerHTML = `
+                        <img src="${app.icon}" 
+                             alt="${app.name}"
+                             onerror="this.src='https://via.placeholder.com/32/3b82f6/ffffff?text=App'">
+                        <span>${app.name}</span>
+                    `;
+                    appsContainer.appendChild(appItem);
+                });
+            }
+
+            // Yangi mahsulot qo'shish
+            addProductBtn.addEventListener('click', function() {
+                editingProductId = null;
+                modalTitle.innerHTML = '<i class="fas fa-plus"></i> Yangi mahsulot';
+                productForm.reset();
+                productImages = [];
+                imagePreview.innerHTML = '';
+                colorsList.innerHTML = '';
+                sizesList.innerHTML = '';
+                loadAppsSelection();
+                productModal.style.display = 'block';
+            });
+
+            // Mahsulotni tahrirlash
+            function editProduct(productId) {
+                const product = products.find(p => p.id === productId);
+                if (!product) return;
+                
+                editingProductId = productId;
+                modalTitle.innerHTML = '<i class="fas fa-edit"></i> Mahsulotni tahrirlash';
+                
+                // Formani to'ldirish
+                productIdInput.value = product.id;
+                productNameInput.value = product.name;
+                productDescriptionInput.value = product.description;
+                productPriceInput.value = product.price;
+                
+                // Rasmlar
+                productImages = [...product.images];
+                updateImagePreview();
+                
+                // Ranglar
+                colorsList.innerHTML = '';
+                if (product.colors && product.colors.length > 0) {
+                    product.colors.forEach(color => {
+                        addColorItem(color);
+                    });
+                }
+                
+                // O'lchamlar
+                sizesList.innerHTML = '';
+                if (product.sizes && product.sizes.length > 0) {
+                    product.sizes.forEach(size => {
+                        addSizeItem(size);
+                    });
+                }
+                
+                // Ilovalar
+                setTimeout(() => {
+                    const checkboxes = appsSelection.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach((checkbox, index) => {
+                        const appData = JSON.parse(checkbox.getAttribute('data-app'));
+                        const isSelected = product.apps && product.apps.some(app => 
+                            app.name === appData.name && app.icon === appData.icon
+                        );
+                        checkbox.checked = isSelected;
+                    });
+                }, 100);
+                
+                productModal.style.display = 'block';
+            }
+
+            // Rasm oldindan ko'rishni yangilash
+            function updateImagePreview() {
+                imagePreview.innerHTML = '';
+                
+                if (productImages.length === 0) {
+                    imagePreview.innerHTML = `
+                        <div style="text-align: center; color: var(--text-color); opacity: 0.6; padding: 20px;">
+                            <i class="fas fa-image" style="font-size: 48px; margin-bottom: 10px;"></i>
+                            <p>Rasmlar yuklanmagan</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                productImages.forEach((image, index) => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${image}" 
+                             alt="Preview ${index + 1}"
+                             onerror="this.src='https://via.placeholder.com/100/3b82f6/ffffff?text=BuyAxis'">
+                        <button type="button" class="remove-image" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imagePreview.appendChild(previewItem);
+                });
+                
+                // Rasmni o'chirish tugmalari
+                document.querySelectorAll('.remove-image').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        productImages.splice(index, 1);
+                        updateImagePreview();
+                    });
+                });
+            }
+
+            // Rasm yuklash
+            uploadImagesBtn.addEventListener('click', function() {
+                imageInput.click();
+            });
+
+            imageInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                let loadedCount = 0;
+                
+                files.forEach(file => {
+                    if (!file.type.startsWith('image/')) {
+                        showNotification('Faqat rasm fayllarini yuklash mumkin!', 'error');
+                        return;
+                    }
+                    
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        showNotification('Rasm hajmi 5MB dan oshmasligi kerak!', 'error');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        productImages.push(e.target.result);
+                        loadedCount++;
+                        if (loadedCount === files.length) {
+                            updateImagePreview();
+                            showNotification(`${files.length} ta rasm yuklandi!`, 'success');
+                        }
+                    };
+                    reader.onerror = function() {
+                        showNotification('Rasm yuklashda xatolik!', 'error');
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                // Inputni tozalash
+                imageInput.value = '';
+            });
+
+            // Rang qo'shish
+            addColorBtn.addEventListener('click', function() {
+                addColorItem('');
+            });
+
+            function addColorItem(value = '') {
+                const colorItem = document.createElement('div');
+                colorItem.className = 'dynamic-item';
+                colorItem.innerHTML = `
+                    <input type="text" placeholder="Rang nomi (masalan: Qora, Oq)" value="${value}">
+                    <button type="button" class="remove-item remove-color">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                colorsList.appendChild(colorItem);
+                
+                // O'chirish tugmasi
+                colorItem.querySelector('.remove-color').addEventListener('click', function() {
+                    colorItem.remove();
+                    toggleDynamicSections();
+                });
+                
+                toggleDynamicSections();
+            }
+
+            // O'lcham qo'shish
+            addSizeBtn.addEventListener('click', function() {
+                addSizeItem('');
+            });
+
+            function addSizeItem(value = '') {
+                const sizeItem = document.createElement('div');
+                sizeItem.className = 'dynamic-item';
+                sizeItem.innerHTML = `
+                    <input type="text" placeholder="O'lcham (masalan: M, L, XL)" value="${value}">
+                    <button type="button" class="remove-item remove-size">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                sizesList.appendChild(sizeItem);
+                
+                // O'chirish tugmasi
+                sizeItem.querySelector('.remove-size').addEventListener('click', function() {
+                    sizeItem.remove();
+                    toggleDynamicSections();
+                });
+                
+                toggleDynamicSections();
+            }
+
+            // Rang va o'lcham bo'limlarini ko'rsatish/yashirish
+            function toggleDynamicSections() {
+                const colorsGroup = document.getElementById('colorsGroup');
+                const sizesGroup = document.getElementById('sizesGroup');
+                
+                // Agar ranglar bo'sh bo'lsa, butun bo'limni yashirish
+                if (colorsList.children.length === 0) {
+                    colorsGroup.style.display = 'none';
+                } else {
+                    colorsGroup.style.display = 'block';
+                }
+                
+                // Agar o'lchamlar bo'sh bo'lsa, butun bo'limni yashirish
+                if (sizesList.children.length === 0) {
+                    sizesGroup.style.display = 'none';
+                } else {
+                    sizesGroup.style.display = 'block';
+                }
+            }
+
+            // Mahsulotni saqlash
+            productForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Forma ma'lumotlarini olish
+                const name = productNameInput.value.trim();
+                const description = productDescriptionInput.value.trim();
+                const price = parseInt(productPriceInput.value);
+                
+                // Validatsiya
+                if (!name || !description || !price) {
+                    showNotification('Barcha majburiy maydonlarni to\'ldiring!', 'error');
+                    return;
+                }
+                
+                if (price <= 0) {
+                    showNotification('Narx 0 dan katta bo\'lishi kerak!', 'error');
+                    return;
+                }
+                
+                // Ranglar
+                const colors = [];
+                colorsList.querySelectorAll('input[type="text"]').forEach(input => {
+                    const value = input.value.trim();
+                    if (value) {
+                        colors.push(value);
+                    }
+                });
+                
+                // O'lchamlar
+                const sizes = [];
+                sizesList.querySelectorAll('input[type="text"]').forEach(input => {
+                    const value = input.value.trim();
+                    if (value) {
+                        sizes.push(value);
+                    }
+                });
+                
+                // Tanlangan ilovalar
+                const selectedApps = [];
+                appsSelection.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    const appData = JSON.parse(checkbox.getAttribute('data-app'));
+                    selectedApps.push(appData);
+                });
+                
+                // Yangi mahsulot obyekti
+                const product = {
+                    id: editingProductId || Date.now().toString(),
+                    name,
+                    description,
+                    price,
+                    images: [...productImages],
+                    colors: colors.length > 0 ? colors : undefined,
+                    sizes: sizes.length > 0 ? sizes : undefined,
+                    apps: selectedApps.length > 0 ? selectedApps : undefined
+                };
+                
+                // Mahsulotni saqlash yoki yangilash
+                if (editingProductId) {
+                    const index = products.findIndex(p => p.id === editingProductId);
+                    if (index !== -1) {
+                        products[index] = product;
+                        showNotification('Mahsulot muvaffaqiyatli yangilandi!', 'success');
+                    }
+                } else {
+                    products.push(product);
+                    showNotification('Yangi mahsulot muvaffaqiyatli qo\'shildi!', 'success');
+                }
+                
+                // LocalStorage ga saqlash
+                localStorage.setItem('buyaxis_products', JSON.stringify(products));
+                
+                // Ro'yxatni yangilash
+                loadProductsList();
+                
+                // Modalni yopish
+                productModal.style.display = 'none';
+            });
+
+            // Mahsulotni o'chirish
+            function deleteProduct(productId) {
+                if (!confirm('Bu mahsulotni o\'chirishni istaysizmi? Bu amalni bekor qilib bo\'lmaydi.')) return;
+                
+                products = products.filter(p => p.id !== productId);
+                localStorage.setItem('buyaxis_products', JSON.stringify(products));
+                loadProductsList();
+                
+                showNotification('Mahsulot muvaffaqiyatli o\'chirildi!', 'success');
+            }
+
+            // Ilova qo'shish
+            addAppBtn.addEventListener('click', function() {
+                appModal.style.display = 'block';
+                currentAppIcon = null;
+            });
+
+            // Ikonka yuklash
+            uploadIconBtn.addEventListener('click', function() {
+                appIconInput.click();
+            });
+
+            appIconInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    showNotification('Faqat rasm fayllarini yuklash mumkin!', 'error');
+                    return;
+                }
+                
+                if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                    showNotification('Ikonka hajmi 2MB dan oshmasligi kerak!', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentAppIcon = e.target.result;
+                    const iconPreview = document.getElementById('iconPreview');
+                    iconPreview.innerHTML = `<img src="${currentAppIcon}" alt="App icon">`;
+                    showNotification('Ikonka yuklandi!', 'success');
+                };
+                reader.onerror = function() {
+                    showNotification('Ikonka yuklashda xatolik!', 'error');
+                };
+                reader.readAsDataURL(file);
+                
+                // Inputni tozalash
+                appIconInput.value = '';
+            });
+
+            // Ilova saqlash
+            appForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const appName = document.getElementById('appName').value.trim();
+                
+                if (!appName) {
+                    showNotification('Ilova nomini kiriting!', 'error');
+                    return;
+                }
+                
+                // Yangi ilova obyekti
+                const newApp = {
+                    name: appName,
+                    icon: currentAppIcon || 'fas fa-mobile-alt'
+                };
+                
+                // Ilovalar ro'yxatiga qo'shish
+                apps.push(newApp);
+                localStorage.setItem('buyaxis_apps', JSON.stringify(apps));
+                
+                // Tanlovni yangilash
+                loadAppsSelection();
+                updateAppsList();
+                
+                // Modalni yopish
+                appModal.style.display = 'none';
+                appForm.reset();
+                
+                // Ikonka oldindan ko'rishini qayta tiklash
+                const iconPreview = document.getElementById('iconPreview');
+                iconPreview.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+                currentAppIcon = null;
+                
+                showNotification('Ilova muvaffaqiyatli qo\'shildi!', 'success');
+            });
+
+            // Modal oynalarni yopish
+            cancelBtn.addEventListener('click', function() {
+                productModal.style.display = 'none';
+            });
+
+            cancelAppBtn.addEventListener('click', function() {
+                appModal.style.display = 'none';
+            });
+
+            closeModals.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+            // Tashqariga bosilganda modalni yopish
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+
+            // Boshlang'ich yuklash
+            updateAppsList();
+            toggleDynamicSections();
+            
+            // Test ma'lumotlari (faqat bo'sh bo'lsa)
+            if (products.length === 0) {
+                products = [
+                    {
+                        id: '1',
+                        name: 'Smartphone X Pro',
+                        description: 'Yangi avlod smartfoni, 128GB xotira, 8GB RAM, 6.7" OLED ekran, 48MP asosiy kamera, 5G qo\'llab-quvvatlash, tez zaryadlovchi.',
+                        price: 3200000,
+                        images: ['https://via.placeholder.com/400x300/3b82f6/ffffff?text=Smartphone+X+Pro'],
+                        colors: ['Qora', 'Kumush', 'Moviy'],
+                        sizes: [],
+                        apps: [
+                            { name: 'Pinduoduo', icon: 'https://via.placeholder.com/50/FF6B6B/ffffff?text=P' },
+                            { name: '1688', icon: 'https://via.placeholder.com/50/4ECDC4/ffffff?text=1688' }
+                        ]
+                    },
+                    {
+                        id: '2',
+                        name: 'Aqlli Soat Series 5',
+                        description: 'Sport va sog\'lom turmush uchun aqlli soat, yurak urish tezligini kuzatish, uxlov rejimi, suvga chidamli, 7 kun batareya.',
+                        price: 850000,
+                        images: ['https://via.placeholder.com/400x300/10b981/ffffff?text=Aqlli+Soat'],
+                        colors: ['Qora', 'Oq', 'Kulrang'],
+                        sizes: ['Kichik', 'O\'rta', 'Katta'],
+                        apps: [
+                            { name: 'Pinduoduo', icon: 'https://via.placeholder.com/50/FF6B6B/ffffff?text=P' }
+                        ]
+                    },
+                    {
+                        id: '3',
+                        name: 'Noutbuk Ultrabook',
+                        description: 'Yengil va kuchli noutbuk, Intel Core i7, 16GB RAM, 512GB SSD, 14" Full HD ekran, 10 soat batareya, Windows 11 Pro.',
+                        price: 7500000,
+                        images: ['https://via.placeholder.com/400x300/8b5cf6/ffffff?text=Noutbuk'],
+                        colors: ['Kumush', 'Kulrang'],
+                        sizes: [],
+                        apps: []
+                    }
+                ];
+                localStorage.setItem('buyaxis_products', JSON.stringify(products));
+                loadProductsList();
+            }
+        });
+    </script>
+</body>
+</html>
